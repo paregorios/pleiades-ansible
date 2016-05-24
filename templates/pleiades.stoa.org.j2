@@ -381,24 +381,6 @@ AddType application/json .json
   </IfModule>
 
   RewriteEngine On
-  #RewriteLog /var/log/apache2/pleiades.stoa.org-rewrite.log
-  #RewriteLogLevel 3
-
-  # tell everyone the site is down (this works)
-  #RewriteCond %{ENV:REDIRECT_STATUS} !=503
-  #RewriteRule .* /down.html [L,R=503]  
-
-  # tell Dickinson College Commentary referalls to get lost for a while
-  #RewriteCond %{HTTP_REFERER} dcc\.dickinson\.edu [NC]
-  #RewriteRule ^/.*$ - [L,R=503]
-
-  # tell all bots to get lost for a while (this works)
-  #RewriteCond %{HTTP_USER_AGENT} (uptimerobot|google|archive.org) [NC]
-  #RewriteCond %{HTTP_USER_AGENT} (uptimerobot) [NC]
-  #RewriteRule ^/.*$ - [S=2]
-  #RewriteCond %{HTTP_USER_AGENT} (feedspot|spider|spyder|bot|crawler) [NC] 
-  #RewriteRule ^/.*$ - [L,R=503]
-
   RewriteRule ^/css/(.+) /var/www/pleiades.stoa.org/pleiades-frontpage/css/$1 [L]
   RewriteRule ^/js/(.+) /var/www/pleiades.stoa.org/pleiades-frontpage/js/$1 [L]
   RewriteRule ^/img/(.+) /var/www/pleiades.stoa.org/pleiades-frontpage/img/$1 [L]
@@ -421,15 +403,6 @@ AddType application/json .json
   RewriteRule ^/places/places-index$ /places [L,R=307]
   RewriteRule ^/places/names-index/$ /places/names-index [L,R=301]
   RewriteRule ^/places/names-index$ /places [L,R=307]
-  #RewriteRule ^/search/$ /search [L,R=301]
-  #RewriteRule ^/search$ / [L,R=301]
-
-  # temporary rule for access to new-fangled JSON
-  # RewriteMap jsonmap prg:/var/www/pleiades.stoa.org/json/jsonmap.py
-  # RewriteCond /var/www/pleiades.stoa.org/json/${jsonmap:$1}.json -f
-  # RewriteRule ^/places/(\d+)/json2$ /var/www/pleiades.stoa.org/json/${jsonmap:$1}.json [L]
-
-  # RewriteRule ^/places/(\d+)/json2$ /places/$1/json2 [L,R=303]
 
   RewriteRule ^/api/index.html$ /var/www/pleiades.stoa.org/pleiades-api/html/index.html [L]
   RewriteRule ^/api(/)?$ /var/www/pleiades.stoa.org/pleiades-api/html/index.html [L]
@@ -452,8 +425,6 @@ AddType application/json .json
 
   # Punch bots in the teeth if they go places that will slow down the site
 
-  #RewriteCond %{HTTP_USER_AGENT} bot [NC,OR]
-  RewriteCond %{HTTP_USER_AGENT} spider [NC,OR]
   RewriteCond %{HTTP_USER_AGENT} FlipboardProxy [OR]
   RewriteCond %{HTTP_USER_AGENT} Google\ Page\ Speed\ Insights [OR]
   RewriteCond %{HTTP_USER_AGENT} Kml-Google [OR]
@@ -489,10 +460,7 @@ AddType application/json .json
   RewriteCond %{HTTP_USER_AGENT} TVersity
   RewriteRule acl|history|Members - [F,L]
 
-  # RewriteCond %{HTTP_USER_AGENT} bot [NC,OR]  -- commented out because blocking lod-cloud.net/robot, semrushbot
-  RewriteCond %{HTTP_USER_AGENT} crawler [NC,OR]
   RewriteCond %{HTTP_USER_AGENT} dapper [NC,OR]  
-  RewriteCond %{HTTP_USER_AGENT} spider [NC,OR]
   RewriteCond %{HTTP_USER_AGENT} FlipboardProxy [OR]
   RewriteCond %{HTTP_USER_AGENT} Google\ Page\ Speed\ Insights [OR]
   RewriteCond %{HTTP_USER_AGENT} Kml-Google [OR]
@@ -501,11 +469,6 @@ AddType application/json .json
   RewriteCond %{HTTP_USER_AGENT} Slurp [OR]
   RewriteCond %{HTTP_USER_AGENT} TVersity
   RewriteRule ^/places/\d+/json$ - [F,L]
-
-# commented this out because it seems to break the pelagios portlet behavior
-#  RewriteCond %{REQUEST_METHOD} GET
-#  RewriteCond %{QUERY_STRING} !came_from_prefs=1
-#  RewriteRule pelagios-tagged - [F,L]
 
   RewriteCond %{REQUEST_METHOD} POST
   RewriteRule ^/places/\d+/json$ - [L,R=405]
